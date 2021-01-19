@@ -1,0 +1,5 @@
+cd ./Guard
+clear
+make -f makefile >& ../makeGuard.out
+cd ..
+
