@@ -27,6 +27,8 @@ class SensorsConfig {
 	json serialize();
 	void deserialize (json sensorsJson);
 
+	SensorConfig* getSensorConfig (int pinNumber);
+
   private:
 	bool insertSensor(SensorConfig* pSensor);
 

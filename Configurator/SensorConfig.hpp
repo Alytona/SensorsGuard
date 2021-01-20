@@ -24,6 +24,9 @@ class SensorConfig {
 		PinNumber = newPinNumber;
 	}
 
+	inline string getName () {
+		return Name;
+	}
 	inline void setName (string name) {
 		Name = name;
 	}

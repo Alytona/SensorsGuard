@@ -69,10 +69,15 @@ bool SensorsConfig::add(int argc, char** argv)
 SensorConfig* SensorsConfig::getSensorConfig (string pinNumberStr) 
 {
 	int pinNumber = getPinNumber(pinNumberStr);
+	return getSensorConfig( pinNumber );
+}
+
+SensorConfig* SensorsConfig::getSensorConfig (int pinNumber) 
+{
 	if (pinNumber != -1) {
 		SensorsIterator iSensor = Sensors.find(pinNumber);
 		if (iSensor == Sensors.end()) {
-			cout << "Sensor with pin number " << pinNumberStr << " does not exists." << endl;
+			cout << "Sensor with pin number " << pinNumber << " does not exists." << endl;
 		}
 		else {
 			return iSensor->second;

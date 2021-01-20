@@ -14,6 +14,9 @@ class SensorsGuardConfig {
 	bool configureSensors(int argc, char** argv);
 
 	void listSensors();
+	
+	int getSensorsQuantity();
+	SensorConfig* getSensorConfig(int sensorIndex);
 
 	void serialize (ostream& outputStream);
 	void deserialize (istream& inputStream);

@@ -2,7 +2,10 @@
 # include <thread>
 # include <syslog.h>
 
+# include <wiringPi.h>
+
 # include "SensorsGuard.hpp"
+# include "SensorGuard.hpp"
 
 SensorsGuard::GuardStates SensorsGuard::getState() 
 {
@@ -21,7 +24,7 @@ void SensorsGuard::setState(GuardStates newState)
 }
 	
 SensorsGuard::SensorsGuard( SensorsGuardConfig* config_ptr ) {
-	pConfig = config_ptr;
+	pConfig = config_ptr; 
 	setState( GuardStates::Inited );
 }
 
@@ -50,6 +53,28 @@ void SensorsGuard::stop()
 void SensorsGuard::work() 
 {
 	syslog( LOG_NOTICE, "Sensors Guard started work." );
+	
+	wiringPiSetup();
+	
+//	SensorGuard sensors[29];
+	
+	for (int i = 1; i <= 29; i++) 
+	{
+		SensorConfig* sensorConfig = pConfig->getSensorConfig( i );
+		if (sensorConfig != NULL) 
+		{
+			SensorGuards[i - 1].init( sensorConfig );
+			if (sensorConfig->isActive())
+			{
+				pinMode( i, INPUT );
+				syslog( LOG_NOTICE, "Active sensor '%s', pin %d, state %d", sensorConfig->getName().c_str(), i, digitalRead( i ) );
+			}
+			else 
+			{
+				syslog( LOG_NOTICE, "Inactive sensor '%s', pin %d", sensorConfig->getName().c_str(), sensorConfig->getPinNumber() );
+			}
+		}
+	}
 	
 	while (getState() != GuardStates::Stopping) {
 		this_thread::sleep_for( chrono::milliseconds( 1000 ) );

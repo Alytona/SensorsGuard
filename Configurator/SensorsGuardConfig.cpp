@@ -61,3 +61,13 @@ void SensorsGuardConfig::deserialize (istream& inputStream) {
 	inputStream >> j;
 	Sensors.deserialize(j["Sensors"]);
 }
+
+int SensorsGuardConfig::getSensorsQuantity() 
+{
+}
+
+SensorConfig* SensorsGuardConfig::getSensorConfig(int sensorIndex) 
+{
+	return Sensors.getSensorConfig( sensorIndex );
+}
+

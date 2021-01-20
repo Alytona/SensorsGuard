@@ -36,6 +36,6 @@ private:
 	{
 		guard_ptr->work();
 	}
-
+ 
 	void work();
 };

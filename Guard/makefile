@@ -1,5 +1,5 @@
 LIBS=/usr/lib/gcc/arm-linux-gnueabihf/6/libstdc++.so /usr/lib/arm-linux-gnueabihf/libglib-2.0.so
-OBJS=./obj/main.o ./obj/SensorsGuard.o ./obj/StopFile.o ./obj/SensorConfig.o ./obj/SensorsConfig.o ./obj/SensorsGuardConfig.o
+OBJS=./obj/main.o ./obj/SensorGuard.o ./obj/SensorsGuard.o ./obj/StopFile.o ./obj/SensorConfig.o ./obj/SensorsConfig.o ./obj/SensorsGuardConfig.o
 CONFIG=-I../Configurator ../Configurator
 
 SensorsGuard : $(OBJS)
@@ -7,6 +7,9 @@ SensorsGuard : $(OBJS)
 
 ./obj/main.o : ./main.cpp
 		gcc -c -o ./obj/main.o -I../Configurator ./main.cpp
+
+./obj/SensorGuard.o : ./SensorGuard.cpp
+		gcc -c -o ./obj/SensorGuard.o -I../Configurator ./SensorGuard.cpp
 
 ./obj/SensorsGuard.o : ./SensorsGuard.cpp
 		gcc -c -o ./obj/SensorsGuard.o -I../Configurator ./SensorsGuard.cpp
