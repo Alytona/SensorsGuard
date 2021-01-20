@@ -9,6 +9,7 @@
 # include <signal.h>
 
 # include "SensorsGuardConfig.hpp"
+# include "SensorsGuard.hpp"
 # include "StopFile.hpp"
 
 using namespace std;
@@ -72,9 +73,14 @@ void startGuard(int argc, char** argv)
 		inConfigFile.close();
 	}
 	config.listSensors();
-
+	
 	stopFile.remove();
+	
+	SensorsGuard guard( &config );
+	guard.start();
+
 	stopFile.waitForNotExists( 1000 );
+	guard.stop();
 	
 	cout << "Sensors Guard stopped." << endl;
 
