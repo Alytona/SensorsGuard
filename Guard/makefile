@@ -1,4 +1,4 @@
-LIBS=/usr/lib/gcc/arm-linux-gnueabihf/6/libstdc++.so /usr/lib/arm-linux-gnueabihf/libglib-2.0.so
+LIBS=/usr/lib/arm-linux-gnueabihf/libstdc++.so.6 # /usr/lib/arm-linux-gnueabihf/libglib-2.0.so
 OBJS=./obj/main.o ./obj/SensorGuard.o ./obj/SensorsGuard.o ./obj/StopFile.o ./obj/SensorConfig.o ./obj/SensorsConfig.o ./obj/SensorsGuardConfig.o
 CONFIG=-I../Configurator ../Configurator
 
