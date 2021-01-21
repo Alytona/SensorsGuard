@@ -3,97 +3,14 @@
 
 # include "SensorGuard.hpp"
 
-SensorGuard SensorGuards[32];
-
-void reportState( int guardIndex ) 
-{
-	SensorGuards[guardIndex].reportState();
-}
-
-void reportState_00() { reportState( 0 ); }
-void reportState_01() { reportState( 1 ); }
-void reportState_02() { reportState( 2 ); }
-void reportState_03() { reportState( 3 ); }
-void reportState_04() { reportState( 4 ); }
-void reportState_05() { reportState( 5 ); }
-void reportState_06() { reportState( 6 ); }
-void reportState_07() { reportState( 7 ); }
-void reportState_08() { reportState( 8 ); }
-void reportState_09() { reportState( 9 ); }
-void reportState_10() { reportState( 10 ); }
-void reportState_11() { reportState( 11 ); }
-void reportState_12() { reportState( 12 ); }
-void reportState_13() { reportState( 13 ); }
-void reportState_14() { reportState( 14 ); }
-void reportState_15() { reportState( 15 ); }
-void reportState_16() { reportState( 16 ); }
-void reportState_17() { reportState( 17 ); }
-void reportState_18() { reportState( 18 ); }
-void reportState_19() { reportState( 19 ); }
-void reportState_20() { reportState( 20 ); }
-void reportState_21() { reportState( 21 ); }
-void reportState_22() { reportState( 22 ); }
-void reportState_23() { reportState( 23 ); }
-void reportState_24() { reportState( 24 ); }
-void reportState_25() { reportState( 25 ); }
-void reportState_26() { reportState( 26 ); }
-void reportState_27() { reportState( 27 ); }
-void reportState_28() { reportState( 28 ); }
-void reportState_29() { reportState( 29 ); }
-void reportState_30() { reportState( 30 ); }
-void reportState_31() { reportState( 31 ); }
-
-SensorISRPointer SensorISRs[32] = {
-	&reportState_00,
-	&reportState_01,
-	&reportState_02,
-	&reportState_03,
-	&reportState_04,
-	&reportState_05,
-	&reportState_06,
-	&reportState_07,
-	&reportState_08,
-	&reportState_09,
-	&reportState_10,
-	&reportState_11,
-	&reportState_12,
-	&reportState_13,
-	&reportState_14,
-	&reportState_15,
-	&reportState_16,
-	&reportState_17,
-	&reportState_18,
-	&reportState_19,
-	&reportState_20,
-	&reportState_21,
-	&reportState_22,
-	&reportState_23,
-	&reportState_24,
-	&reportState_25,
-	&reportState_26,
-	&reportState_27,
-	&reportState_28,
-	&reportState_29,
-	&reportState_30,
-	&reportState_31
-};
-
-void SensorGuard::init( SensorConfig* config_ptr ) 
+void SensorGuard::init( SensorConfig* config_ptr, SensorISRPointer isr_ptr ) 
 {
 	pConfig = config_ptr; 
 	if (pConfig != NULL && pConfig->isActive()) 
 	{
 		int pinNumber = pConfig->getPinNumber();
-try {
-    cout << "point 0" << endl;
 		pinMode( pinNumber, INPUT );
-    cout << "point 1 pinNumber : " << pinNumber << endl;
-		wiringPiISR( pinNumber, INT_EDGE_BOTH, SensorISRs[ pinNumber ] );
-    cout << "point 2" << endl;
-}
-catch( exception error ) {
-    cout << "Exception" << endl;
-}
+		wiringPiISR( pinNumber, INT_EDGE_BOTH, isr_ptr );
 	}
 }
 void SensorGuard::reportState() 

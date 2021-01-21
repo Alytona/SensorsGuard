@@ -16,10 +16,8 @@ public :
 	{
 		pConfig = NULL; 
 	}
-	void init( SensorConfig* config_ptr );
+	void init( SensorConfig* config_ptr, SensorISRPointer isr_ptr );
 	void reportState();
 };
-
-extern SensorGuard SensorGuards[32];
 
 

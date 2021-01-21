@@ -38,4 +38,5 @@ private:
 	}
  
 	void work();
+	bool checkPinNumber (int pinNumber);
 };
