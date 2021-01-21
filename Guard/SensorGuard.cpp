@@ -3,7 +3,7 @@
 
 # include "SensorGuard.hpp"
 
-SensorGuard SensorGuards[29];
+SensorGuard SensorGuards[32];
 
 void reportState( int guardIndex ) 
 {
@@ -39,8 +39,11 @@ void reportState_25() { reportState( 25 ); }
 void reportState_26() { reportState( 26 ); }
 void reportState_27() { reportState( 27 ); }
 void reportState_28() { reportState( 28 ); }
+void reportState_29() { reportState( 29 ); }
+void reportState_30() { reportState( 30 ); }
+void reportState_31() { reportState( 31 ); }
 
-SensorISRPointer SensorISRs[29] = {
+SensorISRPointer SensorISRs[32] = {
 	&reportState_00,
 	&reportState_01,
 	&reportState_02,
@@ -69,7 +72,10 @@ SensorISRPointer SensorISRs[29] = {
 	&reportState_25,
 	&reportState_26,
 	&reportState_27,
-	&reportState_28
+	&reportState_28,
+	&reportState_29,
+	&reportState_30,
+	&reportState_31
 };
 
 void SensorGuard::init( SensorConfig* config_ptr ) 
@@ -78,8 +84,16 @@ void SensorGuard::init( SensorConfig* config_ptr )
 	if (pConfig != NULL && pConfig->isActive()) 
 	{
 		int pinNumber = pConfig->getPinNumber();
+try {
+    cout << "point 0" << endl;
 		pinMode( pinNumber, INPUT );
-		wiringPiISR( pinNumber, INT_EDGE_BOTH, SensorISRs[ pinNumber - 1 ] );
+    cout << "point 1 pinNumber : " << pinNumber << endl;
+		wiringPiISR( pinNumber, INT_EDGE_BOTH, SensorISRs[ pinNumber ] );
+    cout << "point 2" << endl;
+}
+catch( exception error ) {
+    cout << "Exception" << endl;
+}
 	}
 }
 void SensorGuard::reportState() 

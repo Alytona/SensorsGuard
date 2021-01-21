@@ -20,6 +20,6 @@ public :
 	void reportState();
 };
 
-extern SensorGuard SensorGuards[29];
+extern SensorGuard SensorGuards[32];
 
 

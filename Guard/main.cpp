@@ -27,11 +27,13 @@ void printUsage()
 }
 
 int findGuardProcess() {
+//	FILE* fp_output = popen( "ps a | grep \"[^\\\"]SensorsGuard start\"", "r" );
 	FILE* fp_output = popen( "pidof SensorsGuard", "r" );
 	if (fp_output == NULL) 
 		return 0;
 
 	int this_pid = 0, pid = 0;
+//	fscanf( fp_output, "%d", &pid );
 	fscanf( fp_output, "%d %d", &this_pid, &pid );
 		
 	pclose( fp_output );
@@ -142,7 +144,7 @@ void stopGuard(int argc, char** argv)
 {
 	bool force = false;
 	if (argc > 0) {
-		string argv1( argv[1] );
+		string argv1( argv[0] );
 		if (argv1.compare("force") == 0) {
 			force = true;
 		}
@@ -169,7 +171,7 @@ void restartGuard(int argc, char** argv)
 {
 	bool force = false;
 	if (argc > 0) {
-		string argv1( argv[1] );
+		string argv1( argv[0] );
 		if (argv1.compare("force") == 0) {
 			force = true;
 		}

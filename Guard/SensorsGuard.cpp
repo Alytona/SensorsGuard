@@ -56,23 +56,36 @@ void SensorsGuard::work()
 	
 	wiringPiSetup();
 	
-//	SensorGuard sensors[29];
-	
-	for (int i = 1; i <= 29; i++) 
+	for (int i = 0; i < 32; i++) 
 	{
-		SensorConfig* sensorConfig = pConfig->getSensorConfig( i );
-		if (sensorConfig != NULL) 
+		cout << "wPi pin number : " << i << endl;
+
+		if (i >= 0 && i < 64) 
 		{
-			SensorGuards[i - 1].init( sensorConfig );
-			if (sensorConfig->isActive())
+			int bcmPin = wpiPinToGpio( i );
+			cout << "BCM pin number : " << bcmPin << endl;
+
+			if (bcmPin > 0 && bcmPin <= 31 || bcmPin >= 192) 
 			{
-				pinMode( i, INPUT );
-				syslog( LOG_NOTICE, "Active sensor '%s', pin %d, state %d", sensorConfig->getName().c_str(), i, digitalRead( i ) );
+			    SensorConfig* sensorConfig = pConfig->getSensorConfig( i );
+				if (sensorConfig != NULL) 
+				{
+					SensorGuards[i].init( sensorConfig );
+					if (sensorConfig->isActive())
+					{
+						pinMode( i, INPUT );
+						syslog( LOG_NOTICE, "Active sensor '%s', pin %d, state %d", sensorConfig->getName().c_str(), i, digitalRead( i ) );
+					}
+					else 
+					{
+						syslog( LOG_NOTICE, "Inactive sensor '%s', pin %d", sensorConfig->getName().c_str(), sensorConfig->getPinNumber() );
+					}
+				}
+			} else {
+			    cout << "Incorrect BCM pin number" << endl;
 			}
-			else 
-			{
-				syslog( LOG_NOTICE, "Inactive sensor '%s', pin %d", sensorConfig->getName().c_str(), sensorConfig->getPinNumber() );
-			}
+		} else {
+		    cout << "Incorrect pin number" << endl;
 		}
 	}
 	
