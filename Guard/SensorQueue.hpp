@@ -2,6 +2,8 @@
 
 # include <mutex>
 # include <string>
+# include <ctime>
+# include <chrono>
 
 // # include "SensorConfig.hpp"
 
@@ -9,17 +11,17 @@ using namespace std;
 
 class SensorQueueElementData {
 	
-	int TimeTicks;
+	chrono::time_point<chrono::system_clock> TimePoint;
 	int SensorState;
 	
 public:
-	SensorQueueElementData (int timeTicks, int sensorState) 
+	SensorQueueElementData (chrono::time_point<chrono::system_clock> timePoint, int sensorState) 
 	{
-		TimeTicks = timeTicks;
+		TimePoint = timePoint;
 		SensorState = sensorState;
 	}
-	int getTimeTicks() {
-		return TimeTicks;
+	chrono::time_point<chrono::system_clock> getTimePoint() {
+		return TimePoint;
 	}
 	int getSensorState() {
 		return SensorState;
@@ -68,18 +70,16 @@ public :
 	{
 		return FirstElement->getData();
 	}
-	SensorQueueElementData* peekFirst() 
+	SensorQueueElement* peekFirst() 
 	{
 		if (isEmpty())
 			return NULL;
 		
 		SensorQueueElement* firstElement = FirstElement;
-		SensorQueueElementData* firstElementData = FirstElement->getData();
 
 		FirstElement = FirstElement->getNextElement();
 
-		delete firstElement;
-		return firstElementData;
+		return firstElement;
 	}
 	bool isEmpty() 
 	{

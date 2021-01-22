@@ -36,7 +36,15 @@ private:
 	{
 		guard_ptr->work();
 	}
+	static void staticRandomEventsGenerator( SensorsGuard* guard_ptr ) 
+	{
+		guard_ptr->randomEventsGenerator();
+	}
  
+	void randomEventsGenerator();
 	void work();
+	
 	bool checkPinNumber (int pinNumber);
+	
+	int transferMessages();
 };

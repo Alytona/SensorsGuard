@@ -1,3 +1,4 @@
+# include <map>
 # include <chrono>
 # include <thread>
 # include <syslog.h>
@@ -7,7 +8,9 @@
 # include "SensorsGuard.hpp"
 # include "SensorGuard.hpp"
 
-SensorGuard SensorGuards[32];
+# define SENSORS_QUANTITY 32
+
+SensorGuard SensorGuards[SENSORS_QUANTITY];
 
 void reportState( int guardIndex ) 
 {
@@ -47,7 +50,7 @@ void reportState_29() { reportState( 29 ); }
 void reportState_30() { reportState( 30 ); }
 void reportState_31() { reportState( 31 ); }
 
-SensorISRPointer SensorISRs[32] = {
+SensorISRPointer SensorISRs[SENSORS_QUANTITY] = {
 	&reportState_00,
 	&reportState_01,
 	&reportState_02,
@@ -82,6 +85,25 @@ SensorISRPointer SensorISRs[32] = {
 	&reportState_31
 };
 
+void SensorsGuard::randomEventsGenerator() 
+{
+    std::srand( std::time( 0 ) );
+	
+	while (getState() != GuardStates::Stopping) 
+	{
+		int sensorIndex = rand() % 31;
+		int messagesQuantity = rand() % 5;
+		
+		for (int i=0; i<messagesQuantity && getState() != GuardStates::Stopping; i++) {
+			this_thread::sleep_for( chrono::milliseconds( rand() % 100 + 10 ) );
+			if (SensorGuards[sensorIndex].isActive())
+				SensorGuards[sensorIndex].reportState();
+		}
+		
+//		this_thread::sleep_for( chrono::milliseconds( 1000 ) );
+	}
+}
+
 SensorsGuard::GuardStates SensorsGuard::getState() 
 {
 	GuardStates result;
@@ -111,6 +133,9 @@ void SensorsGuard::start()
 	thread workThread( &staticWork, this );
 	workThread.detach();		
 
+	// thread randomGeneratorThread( &staticRandomEventsGenerator, this );
+	// randomGeneratorThread.detach();		
+
 	syslog( LOG_NOTICE, "Sensors Guard started the work thread." );
 }
 
@@ -131,7 +156,7 @@ void SensorsGuard::work()
 	
 	wiringPiSetup();
 	
-	for (int i = 0; i < 32; i++) 
+	for (int i = 0; i < SENSORS_QUANTITY; i++) 
 	{
 		SensorConfig* sensorConfig = pConfig->getSensorConfig( i );
 		if (sensorConfig != NULL) 
@@ -153,7 +178,10 @@ void SensorsGuard::work()
 	}
 	
 	while (getState() != GuardStates::Stopping) {
-		this_thread::sleep_for( chrono::milliseconds( 1000 ) );
+		if (transferMessages() == 0)
+			this_thread::sleep_for( chrono::milliseconds( 1000 ) );
+		else 
+			this_thread::sleep_for( chrono::milliseconds( 100 ) );
 	}
 	setState( GuardStates::Stopped );
 
@@ -176,4 +204,46 @@ bool SensorsGuard::checkPinNumber (int pinNumber)
 	return false; 
 }
 
+int SensorsGuard::transferMessages() 
+{
+	chrono::time_point<chrono::system_clock> transferStartMoment = chrono::system_clock::now();
+	
+	typedef multimap < chrono::time_point<chrono::system_clock>, SensorMessage* > MessagesMap;
+	MessagesMap messages;
+	
+	for (int i = 0; i < SENSORS_QUANTITY; i++) 
+	{
+		if (SensorGuards[i].isActive()) 
+		{
+			SensorMessage* message = SensorGuards[i].getMessageBefore( transferStartMoment );
+			while (message != NULL) 
+			{
+				messages.insert( MessagesMap::value_type( message->getTimePoint(), message ) );
+				message = SensorGuards[i].getMessageBefore( transferStartMoment );
+			}
+		}
+		
+		// Testing delay
+		// this_thread::sleep_for( chrono::milliseconds( 10 ) );
+	}
+
+	int messagesCounter = 0;
+	for (MessagesMap::iterator iM = messages.begin(); iM != messages.end(); iM++) 
+	{
+		SensorMessage* message = iM->second;
+		message->sendToSyslog( messagesCounter++ );
+		delete message;
+	}
+/*
+	cout << "Transfer at \t\t";
+	SensorMessage::outputTime( transferStartMoment );
+	cout << endl;
+	
+	transferStartMoment = chrono::system_clock::now();
+	cout << "Transfer end at \t\t";
+	SensorMessage::outputTime( transferStartMoment );
+	cout << endl;
+*/	
+	return messagesCounter;
+}
 
