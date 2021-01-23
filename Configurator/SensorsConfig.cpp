@@ -4,7 +4,7 @@
 using std::cout;
 using std::endl;
 
-const int MAX_PIN_NUMBER = 28;
+const int MAX_PIN_NUMBER = 31;
 
 typedef map<int, SensorConfig*>::iterator SensorsIterator;
 
@@ -61,6 +61,22 @@ bool SensorsConfig::add(int argc, char** argv)
 					cout << "Sensor was not added. Check add command parameters (<pin number> <name> <state>)." << endl;
 				}
 			}
+		}
+	}
+	return false;
+}
+
+bool SensorsConfig::set(int argc, char** argv)
+{
+	cout << "Setting parameter of sensor." << endl;
+	if (argc < 3) {
+		cout << "Set parameter command should have at least 3 parameters (<pin number> <parameter name> <value>)." << endl;
+	}
+	else {
+		SensorConfig* sensorConfig = getSensorConfig(argv[0]);
+		if (sensorConfig != NULL && sensorConfig->setSensorParameter( argc-1, argv+1 )) {
+			cout << "The parameter of sensor successfully set." << endl;
+			return true;
 		}
 	}
 	return false;

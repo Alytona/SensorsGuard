@@ -6,8 +6,6 @@
 # include "SensorConfig.hpp"
 # include "SensorQueue.hpp"
 
-# include <sys/timeb.h>
-
 using namespace std;
 
 typedef void (*SensorISRPointer)();

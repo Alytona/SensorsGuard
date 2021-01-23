@@ -17,6 +17,7 @@ class SensorsConfig {
 	~SensorsConfig();
 
 	bool add(int argc, char** argv);
+	bool set(int argc, char** argv);
 	bool rename(int argc, char** argv);
 	bool activate(int argc, char** argv);
 	bool deactivate(int argc, char** argv);
