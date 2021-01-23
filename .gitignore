@@ -1,0 +1,10 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/-
+/.vs/SensorsGuard/v16
+/Configurator/bin/ARM/Debug
+/Configurator/obj/ARM/Debug
+/Guard/obj/ARM/Debug
+/Guard/readme
