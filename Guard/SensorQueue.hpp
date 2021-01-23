@@ -5,8 +5,6 @@
 # include <ctime>
 # include <chrono>
 
-// # include "SensorConfig.hpp"
-
 using namespace std;
 
 class SensorQueueElementData {
@@ -70,35 +68,10 @@ public :
 	{
 		return FirstElement->getData();
 	}
-	SensorQueueElement* peekFirst() 
-	{
-		if (isEmpty())
-			return NULL;
-		
-		SensorQueueElement* firstElement = FirstElement;
 
-		FirstElement = FirstElement->getNextElement();
-
-		return firstElement;
-	}
-	bool isEmpty() 
-	{
-		SensorQueueElement* lastElement;
-		{
-			lock_guard<mutex> lock( LastElementMutex );
-			lastElement = LastElement;
-		}
-		return FirstElement == lastElement;
-	}
-	void addLast( SensorQueueElementData* data ) 
-	{
-		LastElement->setData( data );
-		LastElement->setNextElement( new SensorQueueElement() );
-		{
-			lock_guard<mutex> lock( LastElementMutex );
-			LastElement = LastElement->getNextElement();
-		}
-	}
+	bool isEmpty();
+	SensorQueueElement* peekFirst();
+	void addLast(SensorQueueElementData* data);
 };
 
 

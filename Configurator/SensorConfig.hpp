@@ -70,14 +70,12 @@ class SensorConfig
 	inline void deactivate() {
 		Active = false;
 	}
-
 	inline string getLowStateName () {
 		return LowStateName;
 	}
 	inline void setLowStateName (string stateName) {
 		LowStateName = stateName;
 	}
-
 	inline string getHighStateName() {
 		return HighStateName;
 	}

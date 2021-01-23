@@ -71,11 +71,14 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SensorGuard.cpp" />
+    <ClCompile Include="SensorMessage.cpp" />
+    <ClCompile Include="SensorQueue.cpp" />
     <ClCompile Include="SensorsGuard.cpp" />
     <ClCompile Include="StopFile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SensorGuard.hpp" />
+    <ClInclude Include="SensorMessage.hpp" />
     <ClInclude Include="SensorQueue.hpp" />
     <ClInclude Include="SensorsGuard.hpp" />
     <ClInclude Include="StopFile.hpp" />

@@ -12,7 +12,13 @@ void SensorGuard::init( SensorConfig* config_ptr, SensorISRPointer isr_ptr )
 	{
 		int pinNumber = pConfig->getPinNumber();
 		pinMode( pinNumber, INPUT );
-		wiringPiISR( pinNumber, INT_EDGE_BOTH, isr_ptr );
+
+		int mode = INT_EDGE_BOTH;
+		if (pConfig->getStatesToRegister() == StatesRegisterKind::Low)
+			mode = INT_EDGE_FALLING;
+		if (pConfig->getStatesToRegister() == StatesRegisterKind::High)
+			mode = INT_EDGE_RISING;
+		wiringPiISR( pinNumber, mode, isr_ptr );
 	}
 }
 void SensorGuard::reportState() 
@@ -22,9 +28,9 @@ void SensorGuard::reportState()
 	int pinNumber = pConfig->getPinNumber();
 	int state = digitalRead( pinNumber );
 
-	cout << "Event: pin " << pinNumber << " at \t";
-	SensorMessage::outputTime( messageTimePoint );
-	cout << endl;
+//	cout << "Event: pin " << pinNumber << " at \t";
+//	SensorMessage::outputTime( messageTimePoint );
+//	cout << endl;
 	
 //	syslog( LOG_NOTICE, "Sensor '%s', pin %d, state changed. Current state is %d", 
 //		pConfig->getName().c_str(), pinNumber, state );
