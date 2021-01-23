@@ -18,15 +18,15 @@ int SensorsConfig::getPinNumber (string pinNumberStr)
 {
 	try {
 		int pinNumber = stoul(pinNumberStr);
-		if (pinNumber > 0 && pinNumber < MAX_PIN_NUMBER) {
+		if (pinNumber >= 0 && pinNumber <= MAX_PIN_NUMBER) {
 			return pinNumber;
 		} else {
-			cout << "The pin number '" + pinNumberStr + "' is incorrect.";
-			cout << "It should be an integer value in range from 1 to " << MAX_PIN_NUMBER << "." << endl;
+			cout << "The pin number '" + pinNumberStr + "' is incorrect. ";
+			cout << "It should be an integer value in range from 0 to " << MAX_PIN_NUMBER << "." << endl;
 		}
 	} catch (exception&)  {
 		cout << "The pin number '" + pinNumberStr + "' is incorrect. ";
-		cout << "It should be an integer value in range from 1 to " << MAX_PIN_NUMBER << "." << endl;
+		cout << "It should be an integer value in range from 0 to " << MAX_PIN_NUMBER << "." << endl;
 	}
 	return -1;
 }

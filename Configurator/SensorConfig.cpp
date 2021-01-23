@@ -13,12 +13,17 @@ SensorConfig::SensorConfig (int pinNumber, string name, bool active) {
 }
 
 SensorConfig::SensorConfig (json sensorJson) {
+	
 	PinNumber = sensorJson["PinNumber"];
 	Name = sensorJson["Name"];
 	Active = sensorJson["Active"];
-	StatesToRegister = getStatesRegisterKindValue( sensorJson["StatesToRegister"] );
-	LowStateName = sensorJson["LowStateName"];
-	HighStateName = sensorJson["HighStateName"];
+	
+	if (!sensorJson["StatesToRegister"].empty())
+		StatesToRegister = getStatesRegisterKindValue( sensorJson["StatesToRegister"] );
+	if (!sensorJson["LowStateName"].empty())
+		LowStateName = sensorJson["LowStateName"];
+	if (!sensorJson["HighStateName"].empty())
+		HighStateName = sensorJson["HighStateName"];
 }
 
 bool SensorConfig::setSensorParameter(int argc, char** argv) 

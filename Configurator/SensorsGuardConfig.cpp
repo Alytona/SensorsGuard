@@ -65,7 +65,6 @@ void SensorsGuardConfig::getParameter(int argc, char** argv) {
 	}
 }
 bool SensorsGuardConfig::setParameter(int argc, char** argv) {
-	cout << "Parameter configuration." << endl;
 	if (argc >= 2) {
 		string parameterName(argv[0]);
 		cout << "Parameter " << parameterName << " configuration. ";
@@ -73,9 +72,11 @@ bool SensorsGuardConfig::setParameter(int argc, char** argv) {
 			setObjectId( argv[1] );
 			return true;
 		}
+		cout << "Parameter configuration." << endl;
 		cout << "Unknown parameter." << endl;
 	}
 	else {
+		cout << "Parameter configuration." << endl;
 		cout << "Parameter name and value required." << endl;
 	}
 	return false;
@@ -94,6 +95,7 @@ void SensorsGuardConfig::serialize (ostream& outputStream) {
 void SensorsGuardConfig::deserialize (istream& inputStream) {
 	json j;
 	inputStream >> j;
+	
 	if (!j["ObjectId"].empty())
 		ObjectId = j["ObjectId"];
 	Sensors.deserialize(j["Sensors"]);
