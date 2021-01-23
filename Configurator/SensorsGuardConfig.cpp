@@ -94,7 +94,8 @@ void SensorsGuardConfig::serialize (ostream& outputStream) {
 void SensorsGuardConfig::deserialize (istream& inputStream) {
 	json j;
 	inputStream >> j;
-	ObjectId = j["ObjectId"];
+	if (!j["ObjectId"].empty())
+		ObjectId = j["ObjectId"];
 	Sensors.deserialize(j["Sensors"]);
 }
 
