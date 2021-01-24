@@ -28,9 +28,8 @@ void SensorGuard::reportState()
 	int pinNumber = pConfig->getPinNumber();
 	int state = digitalRead( pinNumber );
 
-//	cout << "Event: pin " << pinNumber << " at \t";
-//	SensorMessage::outputTime( messageTimePoint );
-//	cout << endl;
+	cout << "Event: pin " << pinNumber << " state " << state << " at \t";
+	cout << SensorMessage::outputTime( messageTimePoint ) << endl;
 	
 //	syslog( LOG_NOTICE, "Sensor '%s', pin %d, state changed. Current state is %d", 
 //		pConfig->getName().c_str(), pinNumber, state );

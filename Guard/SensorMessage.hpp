@@ -33,9 +33,10 @@ public:
 	}
 	void sendToSyslog( int orderNumber );
 
+	static string outputTime( chrono::time_point<chrono::system_clock> timePoint );
+
 private:
 	string outMessage( int orderNumber );
-	static string outputTime( chrono::time_point<chrono::system_clock> timePoint );
 };
 
 

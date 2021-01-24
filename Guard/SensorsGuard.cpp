@@ -216,23 +216,35 @@ int SensorsGuard::transferMessages()
 	{
 		if (SensorGuards[i].isActive()) 
 		{
-			SensorMessage* message = SensorGuards[i].getMessageBefore( transferStartMoment );
-			while (message != NULL) 
+			SensorMessage* message = NULL;
+			SensorMessage* nextMessage = SensorGuards[i].getMessageBefore( transferStartMoment );
+			while (nextMessage != NULL) 
 			{
-				messages.insert( MessagesMap::value_type( message->getTimePoint(), message ) );
-				message = SensorGuards[i].getMessageBefore( transferStartMoment );
+				if (message != NULL && nextMessage->getTimePoint() - message->getTimePoint() > chrono::milliseconds( 10 )) 
+				{
+					messages.insert( MessagesMap::value_type( message->getTimePoint(), message ) );
+				}
+				message = nextMessage;
+				nextMessage = SensorGuards[i].getMessageBefore( transferStartMoment );
 			}
+			if (message != NULL)
+				messages.insert( MessagesMap::value_type( message->getTimePoint(), message ) );
 		}
 		
 		// Testing delay
 		// this_thread::sleep_for( chrono::milliseconds( 10 ) );
 	}
 
-	int messagesCounter = 0;
+	int localMessagesCounter = 0;
 	for (MessagesMap::iterator iM = messages.begin(); iM != messages.end(); iM++) 
 	{
+		localMessagesCounter++;
+
 		SensorMessage* message = iM->second;
-		message->sendToSyslog( messagesCounter++ );
+		message->sendToSyslog( ++MessagesCounter );
+		if (MessagesCounter == 10000)
+			MessagesCounter = 0;
+			
 		delete message;
 	}
 /*
@@ -245,6 +257,6 @@ int SensorsGuard::transferMessages()
 	SensorMessage::outputTime( transferStartMoment );
 	cout << endl;
 */	
-	return messagesCounter;
+	return localMessagesCounter;
 }
 

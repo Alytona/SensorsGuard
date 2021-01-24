@@ -1,3 +1,5 @@
+# include <sys/types.h>
+# include <unistd.h>
 
 # include <iostream>
 # include <fstream>
@@ -7,6 +9,8 @@
 # include <chrono>
 # include <thread>
 # include <signal.h>
+
+// # include <process.h>
 
 # include "SensorsGuardConfig.hpp"
 # include "SensorsGuard.hpp"
@@ -26,17 +30,32 @@ void printUsage()
 	cout << "\trestart [force] - restart SensorsGuard" << endl;
 }
 
-int findGuardProcess() {
+int findGuardProcess() 
+{
 	FILE* fp_output = popen( "ps a | grep \"SensorsGuard start\" | grep -v \"grep\"", "r" );
-//	FILE* fp_output = popen( "pidof SensorsGuard", "r" );
 	if (fp_output == NULL) 
 		return 0;
 
-	int this_pid = 0, pid = 0;
-	fscanf( fp_output, "%d", &pid );
-//	fscanf( fp_output, "%d %d", &this_pid, &pid );
+	int this_pid = getpid(), parent_pid = getppid();
+	int pid;
+
+	while (!feof(fp_output)) {
+		char psLine[200];
+		if (fgets(psLine, 200, fp_output) == NULL)
+			break;
+
+		sscanf( psLine, "%d", &pid );
+		if (pid != this_pid && pid != parent_pid)
+			break;
+		pid = 0;
 		
+		while (strlen(psLine) == 200) {
+			fgets( psLine, 200, fp_output );
+		}
+	}
+
 	pclose( fp_output );
+//	cout << "pid : " << pid << endl;
 	return pid;
 }
 
@@ -74,7 +93,7 @@ void startGuard(int argc, char** argv)
 		config.deserialize( inConfigFile );
 		inConfigFile.close();
 	}
-	config.listSensors();
+//	config.listSensors();
 	
 	stopFile.remove();
 	

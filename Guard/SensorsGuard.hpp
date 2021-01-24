@@ -25,6 +25,8 @@ class SensorsGuard {
 	GuardStates getState(); 
 	void setState(GuardStates newState);
 	
+	unsigned int MessagesCounter = 0;
+	
 public :	
 	SensorsGuard( SensorsGuardConfig* config_ptr );
 

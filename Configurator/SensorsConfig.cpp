@@ -85,7 +85,10 @@ bool SensorsConfig::set(int argc, char** argv)
 SensorConfig* SensorsConfig::getSensorConfig (string pinNumberStr) 
 {
 	int pinNumber = getPinNumber(pinNumberStr);
-	return getSensorConfig( pinNumber );
+	SensorConfig* sensorConfig = getSensorConfig( pinNumber );
+	if (sensorConfig == NULL)
+		cout << "Sensor with pin number " << pinNumber << " does not exists." << endl;
+	return sensorConfig;
 }
 
 SensorConfig* SensorsConfig::getSensorConfig (int pinNumber) 
@@ -93,11 +96,9 @@ SensorConfig* SensorsConfig::getSensorConfig (int pinNumber)
 	if (pinNumber != -1) {
 		SensorsIterator iSensor = Sensors.find(pinNumber);
 		if (iSensor == Sensors.end()) {
-			cout << "Sensor with pin number " << pinNumber << " does not exists." << endl;
+			return NULL;
 		}
-		else {
-			return iSensor->second;
-		}
+		return iSensor->second;
 	}
 	return NULL;
 }
