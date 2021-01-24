@@ -37,20 +37,25 @@ int findGuardProcess()
 		return 0;
 
 	int this_pid = getpid(), parent_pid = getppid();
+	cout << "this pid : " << this_pid << ", parent pid : " << parent_pid << endl;
 	int pid;
 
 	while (!feof(fp_output)) {
 		char psLine[200];
 		if (fgets(psLine, 200, fp_output) == NULL)
 			break;
+		cout << "0 >" << psLine;
 
 		sscanf( psLine, "%d", &pid );
+		cout << "pid : " << pid << endl;
+
 		if (pid != this_pid && pid != parent_pid)
 			break;
 		pid = 0;
 		
 		while (strlen(psLine) == 200) {
 			fgets( psLine, 200, fp_output );
+			cout << "1 >" << psLine;
 		}
 	}
 
