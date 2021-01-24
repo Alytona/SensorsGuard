@@ -27,14 +27,14 @@ void printUsage()
 }
 
 int findGuardProcess() {
-//	FILE* fp_output = popen( "ps a | grep \"[^\\\"]SensorsGuard start\"", "r" );
-	FILE* fp_output = popen( "pidof SensorsGuard", "r" );
+	FILE* fp_output = popen( "ps a | grep \"SensorsGuard start\" | grep -v \"grep\"", "r" );
+//	FILE* fp_output = popen( "pidof SensorsGuard", "r" );
 	if (fp_output == NULL) 
 		return 0;
 
 	int this_pid = 0, pid = 0;
-//	fscanf( fp_output, "%d", &pid );
-	fscanf( fp_output, "%d %d", &this_pid, &pid );
+	fscanf( fp_output, "%d", &pid );
+//	fscanf( fp_output, "%d %d", &this_pid, &pid );
 		
 	pclose( fp_output );
 	return pid;
